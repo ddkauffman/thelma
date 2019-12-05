@@ -11,4 +11,5 @@ __pycache__
 # Project Files
 .vscode
 .pytest_cache
+.env
 geckodriver.log

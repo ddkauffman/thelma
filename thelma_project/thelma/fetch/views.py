@@ -176,25 +176,8 @@ class DailyStats(TemplateView):
 class FetchStatisticsMinMeanMaxPlot(View):
 
     def create_plot_markup(self, statistics):
-        pass
 
-    def get(self, request):
-
-        url = (
-            f'http://{settings.TELEMETRY_API_HOST}'
-            f':{settings.TELEMETRY_API_PORT}'
-            f'/api/v1/fetch/min-mean-max'
-        )
-
-        response = requests.get(
-                        url,
-                        params={
-                            'mnemonic': request.GET.get('mnemonic'),
-                            }
-                    )
-
-        statistics = response.json()['data']
-
+        # TODO: Refactor this to encapsulate what changes and follow naming convention.
         random_x = statistics['times']
         random_y0 = statistics['mins']
         random_y1 = statistics['means']
@@ -224,7 +207,26 @@ class FetchStatisticsMinMeanMaxPlot(View):
 
         fig = go.Figure(data=data, layout=layout)
 
-        return HttpResponse(pl(fig, output_type='div', include_plotlyjs=False))
+        return pl(fig, output_type='div', include_plotlyjs=False)
+
+    def get(self, request):
+
+        url = (
+            f'http://{settings.TELEMETRY_API_HOST}'
+            f':{settings.TELEMETRY_API_PORT}'
+            f'/api/v1/fetch/min-mean-max'
+        )
+
+        response = requests.get(
+                        url,
+                        params={
+                            'mnemonic': request.GET.get('mnemonic'),
+                        }
+                    )
+
+        statistics = response.json()['data']
+
+        return HttpResponse(self.create_plot_markup(statistics))
 
 
 class FetchTemplateView(TemplateView):

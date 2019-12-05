@@ -3,7 +3,6 @@ $(document).ready(function(){
      * @author David Kauffman
      * @summary Fetch and Analysis Tool for JWST Mnemonics
      * @module TBD
-     * @version v0.3.0
      */
 
     // TODO: convert to es6 standard.
@@ -15,11 +14,6 @@ $(document).ready(function(){
     THELMA.Fetch = {
 
         currentMnemonic: null,
-        /**
-         * This function initializes the Fetch and Analysis Tool (FAT) application state
-         * and binds the event handling functions.
-         * @constructor
-        */
         init: function(){
             this.onClickSubmit();
             this.getStatsTableMarkup('default');
