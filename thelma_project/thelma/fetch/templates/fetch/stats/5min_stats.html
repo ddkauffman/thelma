@@ -1,0 +1,33 @@
+{% load index %}
+<thead>
+    <tr>
+        <th>index</th>
+        <th>time</th>
+        <th>value</th>
+        <th>min</th>
+        <th>max</th>
+        <th>mean</th>
+    </tr>
+</thead>
+<tbody>
+    {% for idx in statistics.indexes %}
+        <tr>
+            <td>{{ idx }}</td>
+            <td>{{ statistics.times|index:forloop.counter0 }}</td>
+            <td>{{ statistics.values|index:forloop.counter0 }}</td>
+            <td>{{ statistics.mins|index:forloop.counter0 }}</td>
+            <td>{{ statistics.maxes|index:forloop.counter0 }}</td>
+            <td>{{ statistics.means|index:forloop.counter0 }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+<tfoot>
+    <tr>
+        <th>tstart</th>
+        <th>n</th>
+        <th>value</th>
+        <th>min</th>
+        <th>max</th>
+        <th>mean</th>
+    </tr>
+</tfoot>

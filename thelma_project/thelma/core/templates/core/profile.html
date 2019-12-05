@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+    <div id="" style="margin-right: 15px; margin-left: 15px;">
+
+        <form method="post" action="{% url 'core:profile' %}">
+            {% csrf_token %}
+            <div class="row">
+                <h3 class="wire-one"><strong>User Information</strong></h3>
+            </div>
+                <div class="grid-x">
+                    <div class="cell small-3 medium-3 large-3">
+                        <label for="{{  user_form.username.id_for_label }}">Username:</label>
+                        {{  user_form.username }}
+                    </div>
+                    <div class="cell small-1 medium-1 large-1"></div>
+                    <div class="cell small-3 medium-3 large-3">
+                        <label for="{{  user_form.email.id_for_label }}">E-Mail:</label>
+                        {{  user_form.email }}
+                    </div>
+                </div>
+                <div class="grid-x">
+                    <div class="cell small-3 medium-3 large-3">
+                        <label for="{{  user_form.first_name.id_for_label }}">First Name:</label>
+                        {{  user_form.first_name }}
+                    </div>
+                    <div class="cell small-1 medium-1 large-1"></div>
+                    <div class="cell small-3 medium-3 large-3">
+                        <label for="{{  user_form.last_name.id_for_label }}">Last Name:</label>
+                        {{  user_form.last_name }}
+                    </div>
+            </div>
+
+            {#  Profile Information  #}
+
+            <div class="grid-x"><h3 class="wire-one">UI Settings</h3></div>
+            <div class="grid-x"><h4></h4>
+                <div class="cell small-6 medium-6 large-6">
+                    <label for="{{  profile_form.default_application.id_for_label }}">Toggle Night Mode:</label>
+                    {{  profile_form.night_mode }}
+                </div>
+            </div>
+            <div class="grid-x"><button type="submit" class="round small button">Save changes</button></div>
+        </form>
+    </div>
+
+{% endblock content %}

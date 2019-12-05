@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  fakeauth:
+    image: nginx:1.17.1-alpine
+    ports:
+      - 8081:80
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: "true"
+    command: [nginx-debug, '-g', 'daemon off;']

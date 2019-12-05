@@ -1,0 +1,71 @@
+/* Fetch Interface */
+
+.input-group.input-group-rounded {
+    width: 250px;
+}
+
+#mnemoic-fetch-group {
+    margin: 0 auto;
+    padding-right: 20px;
+    padding-left: 50px;
+}
+.input-group-rounded .input-group-field {
+    border-radius: 5000px 0 0 5000px;
+    padding-left: 1rem;
+}
+
+.input-group-rounded .input-group-button .button {
+    border-radius: 0 5000px 5000px 0;
+    font-size: 0.8rem;
+}
+
+#plot {
+
+}
+
+svg {
+    display: block;
+    margin: 0 auto;
+}
+
+.area {
+    fill: steelblue;
+    stroke: steelblue;
+    stroke-width: 0.5;
+    clip-path: url(#clip);
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-width: 1.5;
+    clip-path: url(#clip);
+}
+
+
+.plot-controls {
+    /* margin: 0 auto; */
+    /* padding: 10px 0 0 10px; */
+    /* width: 75%; */
+    /* height: 50px; */
+    /* border-bottom: solid 1px #eee; */
+}
+
+#controlGroup {
+    margin-top: -4px;
+}
+
+#overview-content {
+    padding: 0 20px !important;
+    margin-bottom: 20px;
+}
+
+.alt-color {
+    background-color: #eee !important;
+}
+
+.plot-bar-hander:active {
+    cursor: move;
+}

@@ -1,0 +1,14 @@
+# Django
+db.sqlite3
+
+# Python
+*.pyc
+__pycache__
+
+# Mac OSX
+.DS_Store
+
+# Project Files
+.vscode
+.pytest_cache
+geckodriver.log

@@ -1,0 +1,138 @@
+{% load staticfiles %}
+<html>
+    <head lang="en">
+
+        <meta charset="utf-8" />
+        <meta name="description" content="Spacecraft Anomaly Analysis Tool" />
+        <meta name="author" content="David Kauffman" />
+
+        <!-- Favicon Link  -->
+        <link type="image/png" rel="icon" href="{% static 'img/logo.png' %}" />
+
+        <!-- Vendor CSS -->
+        <link href="{% static "vendor/foundation/css/foundation.min.css" %}" rel="stylesheet"/>
+        <link href="{% static "vendor/datatables/css/1.10.18/datatables.min.css" %}" rel="stylesheet"/>
+        <link href="{% static "vendor/noty/css/noty.css" %}" rel="stylesheet"/>
+        <link href="{% static "vendor/noty/css/mint.css" %}" rel="stylesheet"/>
+        <link href="{% static "vendor/fontawesome/css/all.min.css" %}" rel="stylesheet"/>
+
+        <!-- Custom CSS -->
+        <link href="{% static "css/thelma.design.css" %}" rel="stylesheet"/>
+        {% block app_css %}{% endblock app_css %}
+
+    </head>
+    <body>
+        <!-- Main Navigation -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <ul class="dropdown menu" data-dropdown-menu>
+                    <li>
+                        <img src="{% static 'img/logo.png' %}"  id="site-logo">
+                        <span class="encode-sans" id="site-text" style="color: #fff;">THELMA <span style="font-size: .5em;">v1.0.0</span></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-bar-center align-center" style="color: white;">
+                <span>
+                    <span class="sans-serif" id="utc-clock"></span>&nbsp;<i class="far fa-clock"></i> &nbsp; <span class="sans-serif" id="day-of-year"></span>&nbsp;<i class="far fa-calendar-alt"></i>
+                </span>
+            </div>
+            <div class="top-bar-right">
+                <ul class="menu">
+                    <li style="width: 180px;" id="user-profile-">
+                        <a href="{% url 'core:profile' %}" class="button-hover">
+                            <div style="display: flex;">
+                                <span style="color: #fff; float: left; padding-top: 3px;">
+                                    {{ request.user.first_name }} {{ request.user.last_name }} &nbsp;
+                                </span>
+                                <span style="background-color: #fff; border-radius: 25px; padding: 4px;">
+                                    <i class="fas fa-user" style="color: #333; float: left; line-height: none;"></i>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                </u>
+            </div>
+        </div>
+
+        <div class="top-bar " style="background-color: #eee !important; border-bottom: #bbb 1px solid;">
+            <div class="top-bar-left">
+                <ul class=" menu alt-color"  style="color: black;">
+                    <li >
+                        <a href="{% url 'fetch:viewer' %}" class="text-color-daytime"><i class="fas fa-satellite-dish"></i> Fetch</a>
+                    </li>
+                    <li class="global-nav" >
+                        <a href="{% url 'ingest:ingest' %}" class="text-color-daytime" ><i class="fas fa-archive"></i> Archive</a>
+                    </li>
+                    <li class="global-nav">
+                        <a style="color: black;"> <i class="fas fa-book"></i> Docs</a>
+                    </li>
+                    <li class="divider global-nav"></li>
+                </ul>
+            </div>
+            <div class="top-bar-right">
+                <div style="position: relative; top: 7.5px; right: 20px;">
+                    <div class="switch small">
+                    <input class="switch-input" id="day-night" type="checkbox" name="nightModeSwitch" {{ user_preferences.daylight_mode }}>
+                    <label class="switch-paddle" for="day-night">
+                      <span class="switch-active" aria-hidden="true"><i class="fas fa-2x fa-sun"></i></span>
+                      <span class="switch-inactive" aria-hidden="true"><i class="fas  fa-moon"></i></span>
+                    </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Content -->
+
+        <div class="grid-x" style="position: relative;" id="application-content-wrapper">
+            <div class="cell small-12">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </div>
+
+        <div id="footer">
+                <footer class="footer">
+                  <div class="row full-width">
+                    <div class="small-12 medium-3 large-4 columns">
+                      <a href="http://www.stsci.edu"><img id="branding-icon" src="{% static 'img/stsci/stsci_pri_combo_mark_dark_bkgd.svg' %}" ></a>
+                    </div>
+                    <div class="small-12 medium-3 large-4 columns">
+                    </div>
+                    <div class="small-6 medium-3 large-2 columns">
+                    </div>
+                  </div>
+                  <div class="row">
+                        <div>Powered by <a href="" title="Chandra Tools">Chandra Tools</a> </div>
+                  </div>
+                  <div class="row">
+                    <div class="small-8 medium-12 large-12 columns large-centered">
+                      &copy; AURA <copyright>2019</copyright> - STScI
+                    </div>
+                  </div>
+        </footer>
+        <!-- <script src="{% static "js/vue/vue.js" %}"></script> -->
+        <script src="{% static "vendor/fontawesome/js/all.min.js" %}"></script>
+        <script src="{% static "vendor/jquery/jquery.js" %}"></script>
+        <script src="{% static "vendor/jquery/jquery.clock.js" %}"></script>
+
+        <script src="{% static "vendor/noty/js/noty.min.js" %}"></script>
+        <script src="{% static "vendor/moment/moment.js" %}"></script>
+
+        <script src="{% static "vendor/numeraljs/numeral.min.js" %}"></script>
+        <script src="{% static "vendor/plotly/plotly.min.js" %}"></script>
+
+        <script src="{% static "vendor/foundation/js/foundation.min.js" %}"></script>
+        <script src="{% static "vendor/datatables/js/1.10.18/datatables.min.js" %}"></script>
+
+        <!-- <script src="{% static "node_modules/xterm/lib/xterm.js" %}"></script> -->
+        <script src="{% static "js/thelma.js" %}"></script>
+        {% block app_js %}{% endblock app_js %}
+        <script>
+            $(document).foundation();
+        </script>
+
+
+    </body>
+</html>

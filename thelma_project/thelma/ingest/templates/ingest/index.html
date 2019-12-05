@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block app_css %}
+    <!-- <link href="{% static "css/app/fetch.design.css" %}" rel="stylesheet"/> -->
+{% endblock app_css %}
+
+{% block app_js %}
+    <script src="{% static "js/app/ingest.js" %}"></script>
+{% endblock app_js %}
+
+{% block content %}
+{% csrf_token %}
+
+<div id="ingest-status" data-url="{% url 'ingest:status' %} style="display: none;"></div>
+<div id="ingestStatistics" data-url="{% url 'ingest:statistics' %} style="display: none;"></div>
+<div class="grid-x">
+        <div class="cell">
+            <div class="grid-x">
+                <div class="cell small-6">
+                    <fieldset style="border-top: solid 1px #ddd; padding: 10px; margin: 0 5px;">
+                        <legend style="font-size: 2.0em;" class="encode-sans">Archive Metrics</legend>
+                            <div id="archive-metrics-list" style="list-style: none;">
+                                <div style="color: #fff; padding: 20px; border: solid 1px #eee; width:250px; background-color: #74b9ff; float: left; margin-right: 15px;">
+
+                                    <div class="grid-x">
+                                        <div class="small-3">
+                                            <i class="fa fa-hashtag fa-3x" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="small-6">
+                                            <div class="grid-x">
+                                                <div class="cell">
+                                                    <span id="numberOfMnemonicsInArchive" style="font-size: 2em;"></span>
+                                                </div>
+                                                <div class="cell">
+                                                    M. Count
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div style="color: #fff; padding: 20px; border: solid 1px #eee; width:250px; background-color: #74b9ff; float: left;">
+                                    <div class="grid-x">
+                                        <div class="small-3">
+                                            <i class="fas fa-server fa-3x"></i>
+                                        </div>
+                                        <div class="small-6">
+                                            <div class="grid-x">
+                                                <div class="cell">
+                                                    <span id="archiveSize" style="font-size: 2em;"></span>
+                                                </div>
+                                                <div class="cell">
+                                                    Total Size
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </fieldset>
+                </div>
+                <div class="cell small-6">
+                    <fieldset style="border-top: solid 1px #ddd; padding: 10px; margin: 0 5px;">
+                        <legend style="font-size: 2.0em;" class="encode-sans" >Staging Metrics</legend>
+
+                            <div id="staging-metrics-list" style="list-style: none;">
+
+
+                                <div style="color: #fff; padding: 20px; border: solid 1px #eee; width:250px; background-color: #74b9ff; float: left; margin-right: 15px;">
+                                    <div class="grid-x">
+                                        <div class="small-3">
+                                            <i class="fa fa-hashtag fa-3x" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="small-6">
+                                            <div class="grid-x">
+                                                <div class="cell">
+                                                    <span id="numberOfFilesStaged" style="font-size: 2em;"></span>
+                                                </div>
+                                                <div class="cell">
+                                                    # of Files
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="color: #fff; padding: 20px; border: solid 1px #eee; width:250px; background-color: #74b9ff; float: left; margin-right: 15px;">
+
+                                    <div class="grid-x">
+                                        <div class="small-3">
+                                            <i class="fas fa-server fa-3x"></i>
+                                        </div>
+                                        <div class="small-6">
+                                            <div class="grid-x">
+                                                <div class="cell">
+                                                    <span id="stagingSize" style="font-size: 2em;"></span>
+                                                </div>
+                                                <div class="cell">
+                                                    Total Size
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="grid-x" class="encode-sans">
+        <fieldset style="border-top: solid 1px #ddd; padding: 10px; margin: 0 5px; width: 100%;">
+            <legend style="font-size: 2.0em;" class="encode-sans">Ingest Management</legend>
+            <div class="grid-x" style="margin-bottom: 15px;">
+                <div class="cell small-12">
+                    <label style="font-size: 0.9em;">Next Scheduled Ingest:
+                        <span id="nextScheduledIngest">N/A</span>
+                    </label>
+                </div>
+                <div class="cell small-12">
+                    <label style="font-size: 0.9em;">Previous Ingest Duration:
+                        <span id="previousScheduledIngest">N/A</span>
+                    </label>
+                </div>
+            </div>
+            <div class="grid-x">
+                <div class="cell">
+                    <button
+                        type="button"
+                        class="success button"
+                        {% if init_state.is_ingesting %} disabled {% else %} {% endif %}"
+                        style="color: #fff; background-color: #0984e3;"
+                        id="startIngestButton"
+                        data-url="{% url 'ingest:begin' %}"
+                    >
+                        START INGEST
+                    </button>
+                    <button
+                        type="button"
+                        class="alert button"
+                        {% if init_state.is_ingesting %}  {% else %} disabled {% endif %}"
+                    >
+                        STOP INGEST
+                    </button>
+                </div>
+                <div class="cell small-6">
+                    <div class="grid-x">
+                        <div class="cell">
+                            <div class="grid-x">
+                            <fieldset style="border: solid 1px #ddd; padding: 10px; margin: 0 5px; width: 100%;">
+                                <legend style="font-size: 2.0em;" class="encode-sans">Automatic Ingest</legend>
+                                <div class="cell">
+                                    <div class="grid-x">
+                                        <div class="cell small-3">
+                                            <div class="switch large" style="width: 80px;">
+                                                <input class="switch-input" id="automatic-ingest-on-off" type="checkbox" name="automaticIngestSwitch">
+                                                <label class="switch-paddle" for="automatic-ingest-on-off">
+                                                    <span class="show-for-sr">Automatic Ingest</span>
+                                                    <span class="switch-active" aria-hidden="true">On</span>
+                                                    <span class="switch-inactive" aria-hidden="true">Off</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="cell small-9">
+                                            <label style="font-size: 1.1em;">Current Schedule:
+                                                <span>N/A</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <label style="font-size: 1.1em;">Update Schedule:</label>
+                                    <div class="grid-x" id="ingestScheduleControls">
+                                            <div class="cell small-4">
+                                                <input type="date" name="ingestStartDate" />
+                                            </div>
+                                            <div class="cell small-4">
+                                                <input type="time" name="ingestStartDate" />
+                                            </div>
+                                            <div class="cell small-4">
+                                                <select>
+                                                    <option>Does not repeat</option>
+                                                    <option>Daily</option>
+                                                    <option>Weekly</option>
+                                                </select>
+                                            </div>
+                                        <button
+                                            class="button small" style="background-color: #0984e3;"
+                                            id="submitScheduleIngestUpdate"
+                                            data-url="{% url 'ingest:update_schedule' %}">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-6" style="padding: 0 25px;">
+                <fieldset style="border: solid 1px #ddd; padding: 10px; margin: 0 5px; width: 100%;">
+                        <legend style="font-size: 2.0em;" class="encode-sans">Ingest Progress</legend>
+                    <div class="grid-x">
+                        <div class="cell small-12">
+                            <div class="grid-x">
+                                <div class="cell small-6">
+                                    <div class="grid-x">
+                                        <div class="cell small-12">
+                                            <label style="font-size: .9em;">Start:
+                                                <span id="lastIngestStartTime">N/A</span>
+                                            </label>
+                                        </div>
+                                        <div class="cell small-12">
+                                            <label style="font-size: .9em;">End:
+                                                <span id="lastIngestEndTime">N/A</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell small-6">
+                                    <div class="cell small-6">
+                                        <div class="sk-folding-cube no-display" id="ingest-spinner">
+                                            <div class="sk-cube1 sk-cube"></div>
+                                            <div class="sk-cube2 sk-cube"></div>
+                                            <div class="sk-cube4 sk-cube"></div>
+                                            <div class="sk-cube3 sk-cube"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div class="cell small-12">
+                            <label style="font-size: .9em;">Status:
+                                <span id="currentIngestStatus">N/A</span>
+                            </label>
+                        </div>
+                        <div class="cell small-12">
+                            <label style="font-size: .9em;">Processing:
+                                <span id="fileBeingProcessed">N/A</span>
+                            </label>
+                        </div>
+                        <div class="cell">
+                            <label style="font-size: .9em;">Ingest File Processing (<span id="ingestFilesProcessed">0</span>/<span id="ingestFilesInProcessing">0</span>)</label>
+                            <progress class="success" max="100" value="0" style="width: 100%;"></progress>
+                        </div>
+                        <div class="cell">
+                            <a href="#">View Logs</a>
+                        </div>
+                    </div>
+                </fieldset>
+                </div>
+            </div>
+        </fieldset>
+</div>
+<div class="grid-x">
+    <div class="cell">
+        <fieldset style="border: solid 1px #ddd; padding: 10px; margin: 0 5px;">
+            <legend style="font-size: 1.5em;">Staging Area</legend>
+            <label>Upload Ingest File(s):
+                <input type="file" name="ingestFile" multiple class="">
+            </label>
+            <table id="stagingAreaTable" class="display" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Ingest File</th>
+                            <th>Size</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+{% endblock content %}
