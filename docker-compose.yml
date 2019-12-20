@@ -9,6 +9,7 @@ services:
         ARG_VERSION_MINOR: 1
         ARG_VERSION_PATCH: 0
         ARG_RELEASE: "pre-alpha"
+        DEFAULT_USER: ${DEFAULT_USER}
     restart: always
     ports:
       - "8004:8002"

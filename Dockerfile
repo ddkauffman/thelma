@@ -6,6 +6,8 @@ ARG ARG_VERSION_MINOR
 ARG ARG_VERSION_PATCH
 ARG ARG_RELEASE
 
+ARG DEFAULT_USER
+
 RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install supervisor -y \
@@ -32,6 +34,7 @@ ENV VERSION_MAJOR ${ARG_VERSION_MAJOR}
 ENV VERSION_MINOR ${ARG_VERSION_MINOR}
 ENV VERSION_PATCH ${ARG_VERSION_PATCH}
 ENV RELEASE       ${ARG_RELEASE}
+ENV DEFAULT_USER ${DEFAULT_USER}}
 
 WORKDIR /srv/thelma/app/thelma/config
 RUN set -x && python -c "\

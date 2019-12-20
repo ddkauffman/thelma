@@ -10,11 +10,18 @@
 {% block app_js %}
     <!-- <script src="{% static "node_modules/requirejs/require.js" %}"></script> -->
     <script src="{% static "node_modules/xterm/lib/xterm.js" %}"></script>
+    <script src="{% static "node_modules/xterm-addon-fit/lib/xterm-addon-fit.js" %}"></script>
+    <script src="{% static "vendor/socketio/2.1.1/socket.io.js" %}"></script>
     <script src="{% static "js/app/fetch.js" %}"></script>
 {% endblock app_js %}
 
 {% block content %}
 
+<style>
+   .tabs-title > a {
+        padding: 0.55rem 1.5rem;
+    }
+</style>
 
 <div class="reveal large" id="statisticsModal" data-reveal>
     <div id="stats-plot-content" style="min-width: 250px; max-height: 100%;">
@@ -92,19 +99,18 @@
     </div>
     <div class="cell small-12" style="height: 50%; border-top: #ddd solid 1px;" id="statsTableWrapper">
         <ul class="tabs" data-tabs id="example-tabs">
-            <li class="tabs-title is-active"><a class="text-color-daytime" href="#panel1" aria-selected="true" style="font-size: 16px;"><i class="fas fa-table"></i> Stats</a></li>
-            <li class="tabs-title"><a class="text-color-daytime" data-tabs-target="panel2" href="#panel2" style="font-size: 16px;"><i class="fas fa-terminal"></i> Terminal</a></li>
+            <li class="tabs-title is-active"><a class="text-color-daytime" href="#panel1" aria-selected="true" style="font-size: 12px;"><i class="fas fa-terminal"></i> Terminal</a></li>
+            <li class="tabs-title"><a class="text-color-daytime" data-tabs-target="panel2" href="#panel2" style="font-size: 12px;"><i class="fas fa-table"></i> Stats</a></li>
         </ul>
-        <div class="tabs-content" data-tabs-content="example-tabs">
-            <div class="tabs-panel is-active" id="panel1">
-                <table id="mnemonicStatisticsTable"  data-stats-interval="null" class="display" style="width:100%" style="text-align: center; padding: 0 5px 0 5px;"></table>
+        <div class="tabs-content" data-tabs-content="example-tabs" style="border: none !important;">
+            <div class="tabs-panel is-active" style="padding: 0;" id="panel1">
+                <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div>
             </div>
             <div class="tabs-panel" id="panel2">
-                <div style="position: relative; width: 100%;">
-                    <div id="terminal" style="position: relative; width: 100%;  height: 100%;"></div>
-                </div>
+                <table id="mnemonicStatisticsTable"  data-stats-interval="null" class="display" style="width:100%" style="text-align: center; padding: 0 5px 0 5px;"></table>
             </div>
         </div>
     </div>
 </div>
 {% endblock content %}
+

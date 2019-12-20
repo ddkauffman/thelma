@@ -4,11 +4,17 @@ $(document).ready(function(){
      * @summary Fetch and Analysis Tool for JWST Mnemonics
      * @module TBD
      */
-
     // TODO: convert to es6 standard.
     // var Terminal = require('xterm').Terminal;
     /** The THELMA namespace declaration */
     const THELMA = {} || THELMA;
+
+    //const socket ;
+
+    // socket.onopen = function(event){
+    //     console.log('Socket Open')
+    // };
+
 
 
     THELMA.Fetch = {
@@ -18,6 +24,7 @@ $(document).ready(function(){
             this.onClickSubmit();
             this.getStatsTableMarkup('default');
             this.initTerminal();
+            this.onSelectTab();
         },
 
         /**
@@ -110,11 +117,30 @@ $(document).ready(function(){
         },
 
         initTerminal: function(){
-            var term = new Terminal();
+
+
+            const term = new Terminal({
+                cursorBlink: true,
+                macOptionIsMeta: true,
+                scrollback: true,
+            });
+            // const fitAddon = FitAddon();
+            // term.loadAddon(fitAddon);
+
             term.open(document.getElementById('terminal'));
-            // var terminalContainer = document.getElementById('terminal');
-            // term.open(terminalContainer);
-            term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
+
+            console.log(`size: ${term.cols} columns, ${term.rows} rows`)
+
+            term.write('Connecting to \x1B[1;3;31mjSka\x1B[0m ... ')
+            term.onKey((event, ev) => {
+                // console.log("Event Object:", event);
+                // socket.send(event.key);
+            });
+
+            // socket.onmessage = function(event){
+            //     console.log('Message from Socket', event.data)
+            //     term.write(event.data)
+            // };
         },
 
         /**
@@ -161,6 +187,13 @@ $(document).ready(function(){
             }
 
             Plotly.newPlot('plot', data, layout, options);
+        },
+
+        onSelectTab: function(){
+            $('#example-tabs').off('change.zf.tabs');
+            $('#example-tabs').on('change.zf.tabs', function() {
+                $('#mnemonicStatisticsTable').DataTable().draw();
+           });
         },
 
         /** This function binds the onClick event for fetching mnemonic data */
