@@ -14,6 +14,16 @@ function cleanup {
 # trap signals so we can shutdown sssd cleanly
 trap cleanup HUP INT QUIT TERM
 
+cd /srv/thelma/app/thelma
+
+set -x && python manage.py makemigrations && python manage.py migrate;
+cat <<END | python manage.py shell
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+if not User.objects.filter(username='$DEFAULT_USER').exists():
+    User.objects.create_superuser('$DEFAULT_USER', 'no-reply@stsci.edu', '=^f=m_NhW7J(-4xG;5YN~M')
+END
+
 #-------------------------------------------------------------------------------
 # configure supervisor
 #-------------------------------------------------------------------------------
