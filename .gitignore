@@ -1,5 +1,6 @@
 # Django
 db.sqlite3
+db.sqlite3*
 
 # Python
 *.pyc
