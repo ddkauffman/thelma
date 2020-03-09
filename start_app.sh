@@ -18,8 +18,8 @@ export RELEASE=""
 export TELEMETRY_API_HOST=${TELEMETRY_API_HOST}
 export TELEMETRY_API_PORT=${TELEMETRY_API_PORT}
 
-DJANGO_SETTINGS_MODULE=config.settings.base
+DJANGO_SETTINGS_MODULE=config.settingsbase
 
 sudo docker-compose down && sudo docker-compose build;
 
-sudo docker-compose up
+sudo docker-compose up -d
