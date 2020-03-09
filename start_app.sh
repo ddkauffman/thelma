@@ -20,6 +20,6 @@ export TELEMETRY_API_PORT=${TELEMETRY_API_PORT}
 
 DJANGO_SETTINGS_MODULE=config.settings.base
 
-docker-compose down && docker-compose build;
+sudo docker-compose down && sudo docker-compose build;
 
-docker-compose up
+sudo docker-compose up
