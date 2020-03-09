@@ -4,13 +4,9 @@
 
 {% block app_css %}
     <link href="{% static "css/app/fetch.design.css" %}" rel="stylesheet"/>
-    <link href="{% static "node_modules/xterm/css/xterm.css" %}" rel="stylesheet"/>
 {% endblock app_css %}
 
 {% block app_js %}
-    <!-- <script src="{% static "node_modules/requirejs/require.js" %}"></script> -->
-    <script src="{% static "node_modules/xterm/lib/xterm.js" %}"></script>
-    <script src="{% static "node_modules/xterm-addon-fit/lib/xterm-addon-fit.js" %}"></script>
     <script src="{% static "vendor/socketio/2.1.1/socket.io.js" %}"></script>
     <script src="{% static "js/app/fetch.js" %}"></script>
 {% endblock app_js %}
@@ -31,8 +27,7 @@
     </button>
 </div>
 
-<div style="display: none;" data-url="{% url 'fetch:mnemonic' %}" id="mnemonic-data"></div>
-<div style="display: none;" data-url="{% url 'fetch:range' %}" id="mnemonic-range"></div>
+<!-- <div style="display: none;" data-url="{% url 'fetch:range' %}" id="mnemonic-range"></div> -->
 <div style="display: none;" data-url="{% url 'fetch:5min-stats-markup' %}" id="5minStatsMarkup"></div>
 <div style="display: none;" data-url="{% url 'fetch:daily-stats-markup' %}" id="dailyStatsMarkup"></div>
 
@@ -99,15 +94,21 @@
     </div>
     <div class="cell small-12" style="height: 50%; border-top: #ddd solid 1px;" id="statsTableWrapper">
         <ul class="tabs" data-tabs id="example-tabs">
-            <li class="tabs-title is-active"><a class="text-color-daytime" href="#panel1" aria-selected="true" style="font-size: 12px;"><i class="fas fa-terminal"></i> Terminal</a></li>
-            <li class="tabs-title"><a class="text-color-daytime" data-tabs-target="panel2" href="#panel2" style="font-size: 12px;"><i class="fas fa-table"></i> Stats</a></li>
+            <li class="tabs-title is-active"><a class="text-color-daytime" data-tabs-target="panel1" href="#panel1" style="font-size: 12px;"><i class="fas fa-table"></i> Stats</a></li>
+            <li class="tabs-title"><a class="text-color-daytime" href="#panel2" aria-selected="true" style="font-size: 12px;"><img style="width: 15px; margin-top: -10px; margin-bottom: -10px;"src="{% static 'img/jupyter_icon.png' %}"/> Jupyter</a></li>
         </ul>
-        <div class="tabs-content" data-tabs-content="example-tabs" style="border: none !important;">
+        <div class="tabs-content" data-tabs-content="example-tabs" style="border: none !important; padding-top: 10px;">
             <div class="tabs-panel is-active" style="padding: 0;" id="panel1">
-                <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div>
+                <!-- <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div> -->
+                <table id="mnemonicStatisticsTable"  data-stats-interval="null" class="display" style="width:100%" style="text-align: center; padding: 0 5px 0 5px;">
+                </table>
             </div>
             <div class="tabs-panel" id="panel2">
-                <table id="mnemonicStatisticsTable"  data-stats-interval="null" class="display" style="width:100%" style="text-align: center; padding: 0 5px 0 5px;"></table>
+                <div>
+                    <ul class="menu" style="margin: -25px; padding-left: 10px;">
+                        <li><a href="https://pljwchandra.stsci.edu/notebook" target="_blank">Jupyter Lab</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -64,9 +64,9 @@
                     <li class="global-nav" >
                         <a href="{% url 'ingest:ingest' %}" class="text-color-daytime" ><i class="fas fa-archive"></i> Archive</a>
                     </li>
-                    <li class="global-nav">
-                        <a style="color: black;"> <i class="fas fa-book"></i> Docs</a>
-                    </li>
+                    <!-- <li class="global-nav">
+                        <a href="" style="color: black;"> <i class="fas fa-book"></i> Docs</a>
+                    </li> -->
                     <li class="divider global-nav"></li>
                 </ul>
             </div>
@@ -126,7 +126,6 @@
         <script src="{% static "vendor/foundation/js/foundation.min.js" %}"></script>
         <script src="{% static "vendor/datatables/js/1.10.18/datatables.min.js" %}"></script>
 
-        <!-- <script src="{% static "node_modules/xterm/lib/xterm.js" %}"></script> -->
         <script src="{% static "js/thelma.js" %}"></script>
         {% block app_js %}{% endblock app_js %}
         <script>

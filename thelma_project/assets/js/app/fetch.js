@@ -23,7 +23,6 @@ $(document).ready(function(){
         init: function(){
             this.onClickSubmit();
             this.getStatsTableMarkup('default');
-            this.initTerminal();
             this.onSelectTab();
         },
 
@@ -79,7 +78,7 @@ $(document).ready(function(){
                         action: function(){
 
                             $.ajax({
-                                url:'/stats-plot/',
+                                url: window.location + 'stats-plot/',
                                 method: 'get',
                                 data:{'mnemonic': $('#mnemonic').val()},
                                 success: function(response){
@@ -116,32 +115,6 @@ $(document).ready(function(){
             });
         },
 
-        initTerminal: function(){
-
-
-            const term = new Terminal({
-                cursorBlink: true,
-                macOptionIsMeta: true,
-                scrollback: true,
-            });
-            // const fitAddon = FitAddon();
-            // term.loadAddon(fitAddon);
-
-            term.open(document.getElementById('terminal'));
-
-            console.log(`size: ${term.cols} columns, ${term.rows} rows`)
-
-            term.write('Connecting to \x1B[1;3;31mjSka\x1B[0m ... ')
-            term.onKey((event, ev) => {
-                // console.log("Event Object:", event);
-                // socket.send(event.key);
-            });
-
-            // socket.onmessage = function(event){
-            //     console.log('Message from Socket', event.data)
-            //     term.write(event.data)
-            // };
-        },
 
         /**
          *
@@ -209,7 +182,7 @@ $(document).ready(function(){
                 start_of_range = String(document.getElementById('startOfRangeInput').value)
                 end_of_range = String(document.getElementById('endOfRangeInput').value)
 
-                dataURL = $('#mnemonic-data').attr('data-url');
+                dataURL = window.location + 'mnemonic-data/';
                 $.ajax({
                     url: dataURL,
                     method: 'get',

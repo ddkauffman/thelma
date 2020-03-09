@@ -140,8 +140,13 @@ class FiveMinStats(TemplateView):
                 statistics = requests.get(url,  params=parameters)
                 statistics = statistics.json()['stats']
             except Exception as err:
-                return HttpResponse(json.dumps({'message': err.args[0]}), status=500, content_type="application/json")
-        print(statistics)
+                return HttpResponse(json.dumps({
+                    'message': err.args[0],
+                    'source': 'thelman.web',
+                    'class': FiveMinStats,
+                    'call_response': statistics
+                    }), status=500, content_type="application/json")
+
         return render(
             request,
             'fetch/stats/5min_stats.html',
