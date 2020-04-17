@@ -50,8 +50,8 @@ try:
     API_ACCESS_TOKEN = API_TOKENS['access']
     API_REFRESH_TOKEN = API_TOKENS['refresh']
 
-except Exception:
-    raise
+except Exception as err:
+    print(f'Could not init API Token: {err.args[0]}')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
