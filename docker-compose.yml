@@ -20,6 +20,7 @@ services:
       - "TELEMETRY_API_PORT=${TELEMETRY_API_PORT}"
       # - "WEB_ROOT=${WEB_ROOT}"
       - "DJANGO_SETTINGS_MODULE=config.settings.base"
+      - "HTTP_PROTOCOL=${HTTP_PROTOCOL}"
     # network_mode: "host"
 networks:
   default:
