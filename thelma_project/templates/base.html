@@ -22,25 +22,35 @@
 
     </head>
     <body>
+        <!-- About Modal -->
+        <div id="js-about-modal" class="tiny reveal" data-reveal>
+            <h2 id="js-about-modal-title" style="font-size: 14px;">About</h2>
+            <div id="js-about-modal-content">
+
+            </div>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true" style="font-size: small;">&times;</span>
+            </button>
+        </div>
+
         <!-- Main Navigation -->
-        <div class="top-bar">
+        <div class="top-bar" style="height: 30px;">
             <div class="top-bar-left">
                 <ul class="dropdown menu" data-dropdown-menu>
                     <li>
                         <img src="{% static 'img/logo.png' %}"  id="site-logo">
-                        <span class="encode-sans" id="site-text" style="color: #fff;">THELMA <span style="font-size: .5em;">v1.0.0</span></span>
                     </li>
                 </ul>
             </div>
             <div class="tab-bar-center align-center" style="color: white;">
-                <span>
+                <span style="font-size: 12px;">
                     <span class="sans-serif" id="utc-clock"></span>&nbsp;<i class="far fa-clock"></i> &nbsp; <span class="sans-serif" id="day-of-year"></span>&nbsp;<i class="far fa-calendar-alt"></i>
                 </span>
             </div>
             <div class="top-bar-right">
-                <ul class="menu">
-                    <li style="width: 180px;" id="user-profile-">
-                        <a href="{% url 'core:profile' %}" class="button-hover">
+                <ul class="menu" style="font-size: 12px;">
+                    <li style="width: 145px;" id="user-profile-">
+                        <a href="{% url 'core:profile' %}" class="button-hover" style="padding: 0 1rem;">
                             <div style="display: flex;">
                                 <span style="color: #fff; float: left; padding-top: 3px;">
                                     {{ request.user.first_name }} {{ request.user.last_name }} &nbsp;
@@ -55,24 +65,26 @@
             </div>
         </div>
 
-        <div class="top-bar " style="background-color: #eee !important; border-bottom: #bbb 1px solid;">
+        <div class="top-bar " style="background-color: #eee !important; border-bottom: #bbb 1px solid; height: 35px;">
             <div class="top-bar-left">
                 <ul class=" menu alt-color"  style="color: black;">
-                    <li >
-                        <a href="{% url 'fetch:viewer' %}" class="text-color-daytime"><i class="fas fa-satellite-dish"></i> Fetch</a>
+                    <li>  <!-- <i class="fas fa-satellite-dish"></i> -->
+                        <a href="{% url 'fetch:viewer' %}" class="text-color-daytime menu-text">Fetch</a>
                     </li>
-                    <li class="global-nav" >
-                        <a href="{% url 'ingest:ingest' %}" class="text-color-daytime" ><i class="fas fa-archive"></i> Archive</a>
+                    <li class="global-nav"> <!-- <i class="fas fa-archive"></i> -->
+                        <a href="{% url 'ingest:ingest' %}" class="text-color-daytime menu-text">Archive</a>
                     </li>
-                    <!-- <li class="global-nav">
-                        <a href="" style="color: black;"> <i class="fas fa-book"></i> Docs</a>
-                    </li> -->
-                    <li class="divider global-nav"></li>
+                    <li class="global-nav"> <!-- <i class="fas fa-book"></i> -->
+                        <a href="{{ help_documentation_url }}" class="text-color-daytime menu-text">Help</a>
+                    </li>
+                    <li class="global-nav"> <!-- <i class="fas fa-book"></i> -->
+                        <a id="js-about-button" class="text-color-daytime menu-text" >About</a>
+                    </li>
                 </ul>
             </div>
             <div class="top-bar-right">
-                <div style="position: relative; top: 7.5px; right: 20px;">
-                    <div class="switch small">
+                <div style="position: relative; top: 7.5px; right: 55px;">
+                    <div class="switch tiny">
                     <input class="switch-input" id="day-night" type="checkbox" name="nightModeSwitch" {{ user_preferences.daylight_mode }}>
                     <label class="switch-paddle" for="day-night">
                       <span class="switch-active" aria-hidden="true"><i class="fas fa-2x fa-sun"></i></span>
@@ -84,7 +96,6 @@
         </div>
 
         <!-- Application Content -->
-
         <div class="grid-x" style="position: relative;" id="application-content-wrapper">
             <div class="cell small-12">
                 {% block content %}
@@ -108,7 +119,7 @@
                   </div>
                   <div class="row">
                     <div class="small-8 medium-12 large-12 columns large-centered">
-                      &copy; AURA <copyright>2019</copyright> - STScI
+                      &copy; AURA <copyright>2020</copyright> - STScI
                     </div>
                   </div>
         </footer>

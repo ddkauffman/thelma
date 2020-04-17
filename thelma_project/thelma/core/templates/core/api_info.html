@@ -1,0 +1,31 @@
+<div style="font-size: 12px;">
+    <div class="grid-x">
+        <div class="cell small-12 medium-12 large-12">
+            Thelma v{{ app.version.major }}.{{ app.version.minor }}.{{ app.version.patch }}
+        </div>
+        <hr>
+        <div class="cell small-12 medium-12 large-12">
+            <div class="grid-x">
+                <div class="cell small-6 medium-6 large-6">
+                API Status: <span style="color: {% if api.status == 'UP' %} green {% endif %};"> {{ api.status }} </span>
+                </div>
+                <div class="cell small-6 medium-6 large-6">
+                    API Time: {{ api.api_access_time }}
+                </div>
+            </div>
+        </div>
+        <div class="cell small-12 medium-12 large-12">
+            API Version: v{{ api.version.MAJOR_VERSION }}.{{ api.version.MINOR_VERSION }}.{{ api.version.PATCH_VERSION }}
+        </div>
+        <div class="cell small-12 medium-12 large-12">
+            <div class="grid-x">
+                <div class="cell small-6 medium-6 large-6">
+                    Staging Directory: {{ api.info.staging_directory }}
+                </div>
+                <div class="cell small-6 medium-6 large-6">
+                    Telemetry Directory: {{ api.info.telemetry_archive }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

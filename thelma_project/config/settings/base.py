@@ -1,5 +1,7 @@
 import os
+import json
 from unipath import Path
+import requests
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -28,8 +30,28 @@ SEMANTIC_VERSION = {
     'release': '',
 }
 
+# JETA API Configuration
+
 TELEMETRY_API_HOST = get_env_variable('TELEMETRY_API_HOST')
 TELEMETRY_API_PORT = get_env_variable('TELEMETRY_API_PORT')
+
+API_USER = 'svc_jska'
+API_PASSWORD = 'svc_jska'
+
+API_URL = 'http://libertyprime.local.stsci.edu:9232/api/token/'
+
+try:
+    API_TOKENS = requests.post(API_URL, json={
+            'username': API_USER,
+            'password': API_PASSWORD
+        }
+    ).json()
+
+    API_ACCESS_TOKEN = API_TOKENS['access']
+    API_REFRESH_TOKEN = API_TOKENS['refresh']
+
+except Exception:
+    raise
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

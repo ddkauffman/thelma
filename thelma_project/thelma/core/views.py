@@ -1,6 +1,12 @@
+import requests
+
+from django.conf import settings
+
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
+
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
 from .forms import UserForm, ProfileForm
@@ -20,6 +26,27 @@ def get_user_preference(request):
     print(getattr(profile, 'night_mode'))
 
     return {'daylight_mode': night_mode_map[getattr(profile, 'night_mode')]}
+
+
+class APIInfoTemplateView(TemplateView):
+
+    def get(self, request):
+
+        URL = f'http://libertyprime.local.stsci.edu:9232/api/v1/info'
+
+        headers = {'Authorization': f'Bearer {settings.API_ACCESS_TOKEN}'}
+
+        response = requests.get(URL, headers=headers).json()
+        app = {
+            'version': settings.SEMANTIC_VERSION
+        }
+
+        context = {
+            'api': response,
+            'app': app
+        }
+
+        return render(request, 'core/api_info.html', context)
 
 
 class ProfileTemplateView(TemplateView):

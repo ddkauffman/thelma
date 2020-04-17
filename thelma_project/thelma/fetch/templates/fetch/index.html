@@ -51,7 +51,7 @@
                 </ul>
             </li> -->
             <li>
-                <label for="mnemonic">Mnemonic:
+                <label for="mnemonic">mnemonic:
                     <input type="search" name="mnemonic" placeholder="Enter a mnemoic" id="mnemonic" style="width: 185px; height: 25px; font-size: 14px;">
                 </label>
             </li>
@@ -69,7 +69,7 @@
             </li>
             <li><button type="button" class="button small" value="Fetch" id="submit" style="line-height: 0;">FETCH</button></li>
 
-            <li style="margin-left: 5px;"><button type="button" class="button small disabled" value="Fetch" id="submit" style="line-height: 0;">INTERP.</button></li>
+            <li style="margin-left: 5px; color: white;"><button type="button" class="button small warning" value="" id="reset" style="line-height: 0;">RESET</button></li>
         </ul>
     </div>
 </div>
@@ -87,7 +87,7 @@
             <div style="height: 100%; width: 100%; background-image: url('{% static 'img/patterns/dot-grid.png' %}');">
                 <div style="margin: 0 auto; top: 30%; position: relative;" id="default-view-no-data">
                     <i class="fas fa-satellite fa-9x"></i>
-                    <div style="font-size: 22px; margin-top: 10px;">No Data Fetched</div>
+                    <div style="font-size: 22px; margin-top: 10px;">No Plot Initialize</div>
                 </div>
             </div>
         </div>

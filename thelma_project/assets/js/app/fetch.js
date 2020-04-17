@@ -22,6 +22,7 @@ $(document).ready(function(){
         currentMnemonic: null,
         init: function(){
             this.onClickSubmit();
+            this.onClickReset();
             this.getStatsTableMarkup('default');
             this.onSelectTab();
         },
@@ -132,8 +133,11 @@ $(document).ready(function(){
                     $('#mnemonicStatisticsTable').html(html);
                     THELMA.Fetch.initStatisticTable();
                 },
-                error: function(){
-
+                error: function(xhr, error, status){
+                    new Noty({
+                        type: 'error',
+                        text: 'Error: could not fetch stats.',
+                    }).show();
                 }
             });
          },
@@ -193,12 +197,18 @@ $(document).ready(function(){
                     },
                     success: function(json){
                         $('#ingestLoadingSpinner').addClass('no-display');
-                        THELMA.Fetch.plot(json)
+                        new Noty(
+                            {
+                                text: `Fetch for ${mnemonic} complete!`,
+                                type: 'success'
+                            }
+                        ).show();
+                        THELMA.Fetch.plot(json);
                         THELMA.Fetch.getStatsTableMarkup(mnemonic);
                     },
                     error: function(xhr, status, error){
                         $('#ingestLoadingSpinner').addClass('no-display');
-                        var noty = new Noty(
+                        new Noty(
                             {
                                 text: String($.parseJSON(xhr.responseText)['error']),
                                 type: 'error'
@@ -207,6 +217,14 @@ $(document).ready(function(){
                     },
                 });
 
+            });
+        },
+
+        onClickReset: function(){
+            $('#reset').off('click');
+            $('#reset').on('click', function(){
+                console.log('clear plot');
+                Plotly.newPlot('plot');
             });
         },
 

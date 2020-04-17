@@ -9,7 +9,7 @@ urlpatterns = [
         name='viewer'
     ),
     url(
-        r'^mnemonic-data/',
+        r'mnemonic-data/',
         views.FetchMnemonicData.as_view(),
         name='mnemonic'
     ),

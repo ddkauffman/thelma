@@ -32,15 +32,25 @@ html, body {
 }
 
 #site-logo {
-    height: 40px !important;
+    height: 25px !important;
+}
+
+.menu-text {
+  font-size: 12px !important;
+  font-weight: 300 !important;
+  padding: .7rem 0.5rem !important;
+}
+
+.menu-text:hover {
+  text-decoration: underline #0375c2 1.5px;
 }
 
 .global-nav {
-    border-left: solid 1px #595959;
+    /* border-left: solid 1px #595959; */
     border-collapse: collapse !important;
 }
 .global-nav:hover {
-    background-color: #595959;
+    color: #fff;
 }
 
 .global-nav > a  {
