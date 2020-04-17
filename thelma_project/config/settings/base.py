@@ -41,6 +41,8 @@ API_PASSWORD = 'svc_jska'
 HTTP_PROTOCOL = get_env_variable('HTTP_PROTOCOL')
 
 API_URL = f'{HTTP_PROTOCOL}://{TELEMETRY_API_HOST}{TELEMETRY_API_PORT}/api/token/'
+API_ACCESS_TOKEN = None
+API_REFRESH_TOKEN = None
 
 try:
     API_TOKENS = requests.post(API_URL, json={
@@ -55,7 +57,7 @@ try:
 except Exception as err:
     import datetime
     print(f'Could not init API Token: {err.args[0]} {datetime.datetime.now().isoformat()}')
-
+print(f"API TOKEN: {API_ACCESS_TOKEN}")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '*.stsci.edu']
