@@ -53,7 +53,8 @@ try:
     API_REFRESH_TOKEN = API_TOKENS['refresh']
 
 except Exception as err:
-    print(f'Could not init API Token: {err.args[0]}')
+    import datetime
+    print(f'Could not init API Token: {err.args[0]} {datetime.datetime.now().isoformat()}')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
