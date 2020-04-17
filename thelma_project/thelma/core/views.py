@@ -32,7 +32,7 @@ class APIInfoTemplateView(TemplateView):
 
     def get(self, request):
 
-        URL = f'http://{TELEMETRY_API_HOST}{TELEMETRY_API_PORT}/api/v1/info'
+        URL = f'http://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/info'
 
         headers = {'Authorization': f'Bearer {settings.API_ACCESS_TOKEN}'}
 
