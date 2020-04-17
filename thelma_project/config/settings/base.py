@@ -44,12 +44,16 @@ API_URL = f'{HTTP_PROTOCOL}://{TELEMETRY_API_HOST}{TELEMETRY_API_PORT}/api/token
 API_ACCESS_TOKEN = None
 API_REFRESH_TOKEN = None
 
+print(f'TOKEN URL: {API_URL}')
+
 try:
     API_TOKENS = requests.post(API_URL, json={
             'username': API_USER,
             'password': API_PASSWORD
         }
     ).json()
+
+    print(f'Response: {API_TOKENS}')
 
     API_ACCESS_TOKEN = API_TOKENS['access']
     API_REFRESH_TOKEN = API_TOKENS['refresh']
