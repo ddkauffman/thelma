@@ -27,7 +27,7 @@ from thelma.core.views import get_user_preference
 
 def get_mnemonic_date_range(mnemonic):
 
-    url = f'http://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/date-range'
+    url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/date-range'
 
     try:
         date_range = requests.get(url,  params={'mnemonic': mnemonic, })
@@ -52,7 +52,7 @@ class FetchMnemonicDataInRange(View):
         new_domain_start = request.GET.get('newDomainStart', None)
         new_domain_end = request.GET.get('newDomainEnd', None)
 
-        url = f'http://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/data'
+        url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/data'
 
         telemetry = requests.get(url, params={
             'mnemonic': mnemonic,
@@ -101,7 +101,7 @@ class FetchMnemonicData(View):
 
             end_of_range = request.GET.get('end_of_range').replace(' ', '')
 
-            url = f'http://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/plot'
+            url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/plot'
 
             telemetry = requests.get(url,  params={
                     'mnemonic': mnemonic,
@@ -133,7 +133,7 @@ class FiveMinStats(TemplateView):
 
         if mnemonic is not None and mnemonic != 'default':
 
-            url = f'http://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
+            url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
             parameters = {'mnemonic': mnemonic, 'interval': '5min'}
 
             try:
@@ -163,7 +163,7 @@ class DailyStats(TemplateView):
 
         if mnemonic is not None and mnemonic != 'default':
 
-            url = f'http://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
+            url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
             parameters = {'mnemonic': mnemonic, 'interval': 'daily'}
 
             try:
@@ -217,7 +217,7 @@ class FetchStatisticsMinMeanMaxPlot(View):
     def get(self, request):
 
         url = (
-            f'http://{settings.TELEMETRY_API_HOST}'
+            f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}'
             f':{settings.TELEMETRY_API_PORT}'
             f'/api/v1/fetch/min-mean-max'
         )

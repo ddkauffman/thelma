@@ -38,7 +38,9 @@ TELEMETRY_API_PORT = get_env_variable('TELEMETRY_API_PORT')
 API_USER = 'svc_jska'
 API_PASSWORD = 'svc_jska'
 
-API_URL = f'http://{TELEMETRY_API_HOST}{TELEMETRY_API_PORT}/api/token/'
+HTTP_PROTOCOL = get_env_variable('HTTP_PROTOCOL')
+
+API_URL = f'{HTTP_PROTOCOL}://{TELEMETRY_API_HOST}{TELEMETRY_API_PORT}/api/token/'
 
 try:
     API_TOKENS = requests.post(API_URL, json={
