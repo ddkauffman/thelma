@@ -25,6 +25,11 @@ from django.views.generic import TemplateView
 from thelma.core.views import get_user_preference
 
 
+def get_default_plot_viewer_content(request):
+
+    return render(request, 'fetch/default_plot_viewer_content.html', {})
+
+
 def get_mnemonic_date_range(mnemonic):
 
     url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/date-range'
@@ -228,20 +233,11 @@ class FetchStatisticsMinMeanMaxPlot(View):
 
         url = (
             f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}'
-            f':{settings.TELEMETRY_API_PORT}'
+            f'{settings.TELEMETRY_API_PORT}'
             f'/api/v1/fetch/min-mean-max'
         )
 
-        access_token = os.environ['API_ACCESS_TOKEN']
-        headers = {'Authorization': f'Bearer {access_token}'}
-
-        response = requests.get(
-                        url,
-                        params={
-                            'mnemonic': request.GET.get('mnemonic'),
-                        },
-                        headers=headers
-                    )
+        response = requests.get(url, params={'mnemonic': request.GET.get('mnemonic')})
 
         statistics = response.json()['data']
 

@@ -224,8 +224,21 @@ $(document).ready(function(){
         onClickReset: function(){
             $('#reset').off('click');
             $('#reset').on('click', function(){
-                console.log('clear plot');
                 Plotly.newPlot('plot');
+                $.ajax({
+                    url: window.location + 'default/viewport',
+                    method: 'get',
+                    success: function(response){
+                        $('#plot').html(response);
+                    },
+                    error: function(xhr, status, error){
+                        new Noty({
+                            text: 'Warning: Problem getting default viewport',
+                            type: 'warning',
+                            timeout: 5000,
+                        });
+                    }
+                });
             });
         },
 

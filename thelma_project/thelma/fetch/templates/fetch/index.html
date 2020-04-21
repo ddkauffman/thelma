@@ -84,10 +84,10 @@
                 <div class="rect4"></div>
                 <div class="rect5"></div>
             </div>
-            <div style="height: 100%; width: 100%; background-image: url('{% static 'img/patterns/dot-grid.png' %}');">
+            <div id="default-view-no-data-wrapper" style="height: 100%; width: 100%; background-image: url('{% static 'img/patterns/dot-grid.png' %}');">
                 <div style="margin: 0 auto; top: 30%; position: relative;" id="default-view-no-data">
                     <i class="fas fa-satellite fa-9x"></i>
-                    <div style="font-size: 22px; margin-top: 10px;">No Plot Initialize</div>
+                    <div style="font-size: 22px; margin-top: 10px;">No Plot Initialized</div>
                 </div>
             </div>
         </div>
@@ -95,7 +95,7 @@
     <div class="cell small-12" style="height: 50%; border-top: #ddd solid 1px;" id="statsTableWrapper">
         <ul class="tabs" data-tabs id="example-tabs">
             <li class="tabs-title is-active"><a class="text-color-daytime" data-tabs-target="panel1" href="#panel1" style="font-size: 12px;"><i class="fas fa-table"></i> Stats</a></li>
-            <li class="tabs-title"><a class="text-color-daytime" href="#panel2" aria-selected="true" style="font-size: 12px;"><img style="width: 15px; margin-top: -10px; margin-bottom: -10px;"src="{% static 'img/jupyter_icon.png' %}"/> Jupyter</a></li>
+            <li class="tabs-title"><a class="text-color-daytime" href="#panel2" aria-selected="true" style="font-size: 12px;"><i class="fas fa-microscope"></i> Full Res.</a></li>
         </ul>
         <div class="tabs-content" data-tabs-content="example-tabs" style="border: none !important; padding-top: 10px;">
             <div class="tabs-panel is-active" style="padding: 0;" id="panel1">
@@ -105,9 +105,8 @@
             </div>
             <div class="tabs-panel" id="panel2">
                 <div>
-                    <ul class="menu" style="margin: -25px; padding-left: 10px;">
-                        <li><a href="https://pljwchandra.stsci.edu/notebook" target="_blank">Jupyter Lab</a></li>
-                    </ul>
+                    <table id="js-full-resolution-data-table" class="display" style="width: 100%;">
+                    </table>
                 </div>
             </div>
         </div>

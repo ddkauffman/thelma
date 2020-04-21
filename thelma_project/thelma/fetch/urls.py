@@ -38,4 +38,9 @@ urlpatterns = [
         views.FetchStatisticsMinMeanMaxPlot.as_view(),
         name='stats-plot'
     ),
+    url(
+        r'default/viewport',
+        views.get_default_plot_viewer_content,
+        name='default_viewport'
+    ),
 ]
