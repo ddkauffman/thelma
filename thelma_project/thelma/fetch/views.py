@@ -3,7 +3,7 @@
 This Django view is responsible for handling requests for telemetry data
 
 """
-
+import os
 import json
 import requests
 
@@ -28,9 +28,11 @@ from thelma.core.views import get_user_preference
 def get_mnemonic_date_range(mnemonic):
 
     url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/date-range'
+    access_token = os.environ['API_ACCESS_TOKEN']
+    headers = {'Authorization': f'Bearer {access_token}'}
 
     try:
-        date_range = requests.get(url,  params={'mnemonic': mnemonic, })
+        date_range = requests.get(url, params={'mnemonic': mnemonic, }, headers=headers)
     except Exception as err:
         raise ValueError(err.args[0])
     if date_range.json().get('error', '') != '':
@@ -53,12 +55,14 @@ class FetchMnemonicDataInRange(View):
         new_domain_end = request.GET.get('newDomainEnd', None)
 
         url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/data'
+        access_token = os.environ['API_ACCESS_TOKEN']
+        headers = {'Authorization': f'Bearer {access_token}'}
 
         telemetry = requests.get(url, params={
             'mnemonic': mnemonic,
             'newDomainStart': new_domain_start,
             'newDomainEnd': new_domain_end
-            })
+            }, headers=headers)
 
         return HttpResponse(telemetry, content_type="application/json")
 
@@ -102,12 +106,14 @@ class FetchMnemonicData(View):
             end_of_range = request.GET.get('end_of_range').replace(' ', '')
 
             url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/plot'
+            access_token = os.environ['API_ACCESS_TOKEN']
+            headers = {'Authorization': f'Bearer {access_token}'}
 
-            telemetry = requests.get(url,  params={
+            telemetry = requests.get(url, params={
                     'mnemonic': mnemonic,
                     'start_of_range': start_of_range,
                     'end_of_range': end_of_range
-                }
+                }, headers=headers
             )
         except Exception as err:
             self.status = 400
@@ -135,9 +141,11 @@ class FiveMinStats(TemplateView):
 
             url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
             parameters = {'mnemonic': mnemonic, 'interval': '5min'}
+            access_token = os.environ['API_ACCESS_TOKEN']
+            headers = {'Authorization': f'Bearer {access_token}'}
 
             try:
-                statistics = requests.get(url,  params=parameters)
+                statistics = requests.get(url,  params=parameters, headers=headers)
                 statistics = statistics.json()['stats']
             except Exception as err:
                 return HttpResponse(json.dumps({
@@ -165,6 +173,8 @@ class DailyStats(TemplateView):
 
             url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
             parameters = {'mnemonic': mnemonic, 'interval': 'daily'}
+            access_token = os.environ['API_ACCESS_TOKEN']
+            headers = {'Authorization': f'Bearer {access_token}'}
 
             try:
                 pass
@@ -222,11 +232,15 @@ class FetchStatisticsMinMeanMaxPlot(View):
             f'/api/v1/fetch/min-mean-max'
         )
 
+        access_token = os.environ['API_ACCESS_TOKEN']
+        headers = {'Authorization': f'Bearer {access_token}'}
+
         response = requests.get(
                         url,
                         params={
                             'mnemonic': request.GET.get('mnemonic'),
-                        }
+                        },
+                        headers=headers
                     )
 
         statistics = response.json()['data']

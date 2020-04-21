@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6-slim-stretch
 ENV PYTHONUNBUFFERED 1
 
 ARG ARG_VERSION_MAJOR
@@ -11,6 +11,7 @@ ARG DEFAULT_USER
 RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install supervisor -y \
+    && apt-get install -y redis-server \
     && apt-get autoremove --purge \
     && apt-get clean
 RUN set -x \
@@ -34,7 +35,8 @@ ENV VERSION_MAJOR ${ARG_VERSION_MAJOR}
 ENV VERSION_MINOR ${ARG_VERSION_MINOR}
 ENV VERSION_PATCH ${ARG_VERSION_PATCH}
 ENV RELEASE       ${ARG_RELEASE}
-ENV DEFAULT_USER ${DEFAULT_USER}}
+ENV DEFAULT_USER ${DEFAULT_USER}
+ENV API_ACCESS_TOKEN=unknown
 
 WORKDIR /srv/thelma/app/thelma/config
 RUN set -x && python -c "\

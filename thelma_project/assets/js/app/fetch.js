@@ -200,7 +200,8 @@ $(document).ready(function(){
                         new Noty(
                             {
                                 text: `Fetch for ${mnemonic} complete!`,
-                                type: 'success'
+                                type: 'success',
+                                timeout: 3000,
                             }
                         ).show();
                         THELMA.Fetch.plot(json);

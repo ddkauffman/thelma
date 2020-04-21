@@ -3,6 +3,8 @@ import json
 from unipath import Path
 import requests
 
+from celery.decorators import task
+
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).ancestor(2)
@@ -30,6 +32,8 @@ SEMANTIC_VERSION = {
     'release': '',
 }
 
+
+
 # JETA API Configuration
 
 TELEMETRY_API_HOST = get_env_variable('TELEMETRY_API_HOST')
@@ -41,27 +45,56 @@ API_PASSWORD = 'svc_jska'
 HTTP_PROTOCOL = get_env_variable('HTTP_PROTOCOL')
 
 API_URL = f'{HTTP_PROTOCOL}://{TELEMETRY_API_HOST}{TELEMETRY_API_PORT}/api/token/'
-API_ACCESS_TOKEN = None
-API_REFRESH_TOKEN = None
 
-print(f'TOKEN URL: {API_URL}')
+# Celery
 
-try:
+
+@task
+def get_new_token():
+
+    API_URL = f'{HTTP_PROTOCOL}://{TELEMETRY_API_HOST}{TELEMETRY_API_PORT}/api/token/'
+
     API_TOKENS = requests.post(API_URL, json={
             'username': API_USER,
             'password': API_PASSWORD
         }
     ).json()
 
-    print(f'Response: {API_TOKENS}')
+    os.environ['API_ACCESS_TOKEN'] = API_TOKENS['access']
+    # os.environ['API_REFRESH_TOKEN'] = API_TOKENS['refresh']
+    print('New Access Token Set')
 
-    API_ACCESS_TOKEN = API_TOKENS['access']
-    API_REFRESH_TOKEN = API_TOKENS['refresh']
 
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+
+CELERY_BEAT_SCHEDULE = {
+  'refresh_token': {
+        'task': 'get_new_token',
+        'schedule': 300.0,
+        'args': ()
+    },
+}
+
+try:
+    print(f'Setting init token ... ')
+    API_TOKENS = requests.post(API_URL, json={
+            'username': API_USER,
+            'password': API_PASSWORD
+        }
+    ).json()
+
+    os.environ['API_ACCESS_TOKEN'] = API_TOKENS['access']
+    # os.environ['API_REFRESH_TOKEN'] = API_TOKENS['refresh']
+    print(f'Token set ... ')
 except Exception as err:
     import datetime
     print(f'Could not init API Token: {err.args[0]} {datetime.datetime.now().isoformat()}')
-print(f"API TOKEN: {API_ACCESS_TOKEN}")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '*.stsci.edu']
@@ -77,6 +110,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'thelma.core',
     'thelma.fetch',
     'thelma.ingest',

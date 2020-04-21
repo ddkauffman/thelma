@@ -1,3 +1,4 @@
+import os
 import requests
 
 from django.conf import settings
@@ -33,8 +34,8 @@ class APIInfoTemplateView(TemplateView):
     def get(self, request):
 
         URL = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/info'
-
-        headers = {'Authorization': f'Bearer {settings.API_ACCESS_TOKEN}'}
+        access_token = os.environ['API_ACCESS_TOKEN']
+        headers = {'Authorization': f'Bearer {access_token}'}
 
         response = requests.get(URL, headers=headers).json()
         app = {
