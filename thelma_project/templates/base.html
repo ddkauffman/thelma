@@ -76,7 +76,7 @@
                         <a href="{% url 'ingest:ingest' %}" class="text-color-daytime menu-text">Archive</a>
                     </li>
                     <li class="global-nav"> <!-- <i class="fas fa-book"></i> -->
-                        <a href="{{ help_documentation_url }}" class="text-color-daytime menu-text">Help</a>
+                        <a href="https://pljwkadi.stsci.edu/" target="_blank" class="text-color-daytime menu-text">Help</a>
                     </li>
                     <li class="global-nav"> <!-- <i class="fas fa-book"></i> -->
                         <a id="js-about-button" class="text-color-daytime menu-text" >About</a>
@@ -88,7 +88,7 @@
                 </ul>
             </div>
             <div class="top-bar-right">
-                <div style="position: relative; top: 7.5px; right: 55px;">
+                <div style="position: relative; top: 7.5px; right: 55px;" class="no-display">
                     <div class="switch tiny">
                     <input class="switch-input" id="day-night" type="checkbox" name="nightModeSwitch" {{ user_preferences.daylight_mode }}>
                     <label class="switch-paddle" for="day-night">

@@ -24,6 +24,7 @@ $(document).ready(function(){
             this.onClickSubmit();
             this.onClickReset();
             this.getStatsTableMarkup('default');
+            $('#js-full-resolution-data-table').DataTable();
             this.onSelectTab();
         },
 
@@ -65,7 +66,7 @@ $(document).ready(function(){
             $('#mnemonicStatisticsTable').DataTable({
                 dom: "<'row'<'small-6 columns'l><'small-6 columns'f>Br>"+
                      "t"+
-                     "<'row'<'small-6 columns'i><'small-6 columns'p>>",
+                     "<'row'<'small-6 columns'i><'small-6 columns'>p>",
                 buttons: [
                     {
                         extend: 'collection',
@@ -110,7 +111,7 @@ $(document).ready(function(){
                         className: 'tiny margin-left',
                     }
                 ],
-                scrollY: "200px",
+                // scrollY: "200px",
                 scrollCollapse: true,
                 pageLength: 5,
             });
@@ -139,6 +140,25 @@ $(document).ready(function(){
                         text: 'Error: could not fetch stats.',
                     }).show();
                 }
+            });
+         },
+
+         getFullResolutionMarkup: function(mnemonic){
+            $.ajax({
+                url: window.location + '/fetch/full/resolution',
+                method: 'get',
+                data: {
+                    mnemonic: mnemonic,
+                },
+                success: function(response){
+                    $('#js-full-resolution-data-table').DataTable().destroy();
+                    $('#js-full-resolution-data-table').html(response);
+                    $('#js-full-resolution-data-table').DataTable();
+                },
+                error: function(xhr, status, error){
+                    console.log(status);
+                    console.log(error);
+                },
             });
          },
 
@@ -178,13 +198,14 @@ $(document).ready(function(){
             $('#submit').off('click');
             $('#submit').on('click', function(){
 
+                $('#default-view-no-data-wrapper').addClass('no-display');
                 $('#ingestLoadingSpinner').removeClass('no-display');
 
                 mnemonic = String(document.getElementById('mnemonic').value)
                 THELMA.Fetch.currentMnemonic = mnemonic;
 
-                start_of_range = String(document.getElementById('startOfRangeInput').value)
-                end_of_range = String(document.getElementById('endOfRangeInput').value)
+                start_of_range = String(document.getElementById('startOfRangeInput').value);
+                end_of_range = String(document.getElementById('endOfRangeInput').value);
 
                 dataURL = window.location + 'mnemonic-data/';
                 $.ajax({
@@ -196,6 +217,7 @@ $(document).ready(function(){
                         end_of_range: end_of_range,
                     },
                     success: function(json){
+                        $('#default-view-no-data-wrapper').removeClass('no-display');
                         $('#ingestLoadingSpinner').addClass('no-display');
                         new Noty(
                             {
@@ -206,8 +228,10 @@ $(document).ready(function(){
                         ).show();
                         THELMA.Fetch.plot(json);
                         THELMA.Fetch.getStatsTableMarkup(mnemonic);
+                        THELMA.Fetch.getFullResolutionMarkup(mnemonic);
                     },
                     error: function(xhr, status, error){
+                        $('#default-view-no-data-wrapper').removeClass('no-display');
                         $('#ingestLoadingSpinner').addClass('no-display');
                         new Noty(
                             {
@@ -230,6 +254,8 @@ $(document).ready(function(){
                     method: 'get',
                     success: function(response){
                         $('#plot').html(response);
+                        $('#js-full-resolution-data-table').DataTable().clear().draw();
+                        $('#mnemonicStatisticsTable').DataTable().clear().draw();
                     },
                     error: function(xhr, status, error){
                         new Noty({

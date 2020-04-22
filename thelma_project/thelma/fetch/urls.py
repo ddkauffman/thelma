@@ -43,4 +43,9 @@ urlpatterns = [
         views.get_default_plot_viewer_content,
         name='default_viewport'
     ),
+    url(
+        r'full/resolution',
+        views.get_full_resolution_data,
+        name='full_resolution_data'
+    ),
 ]

@@ -162,9 +162,9 @@ input:checked ~ .switch-paddle {
 }
 
 .spinner {
-  margin: 15% auto;
+  margin: 10% auto;
   width: 500px;
-  height: 150px;
+  height: 100px;
   text-align: center;
   font-size: 40px;
 }
@@ -183,7 +183,7 @@ input:checked ~ .switch-paddle {
 
 .spinner > div {
     background-color: #1a63b6;
-    height: 100%;
+    height: 50%;
     width: 3px;
     display: inline-block;
 
