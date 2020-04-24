@@ -4,13 +4,9 @@
 
 {% block app_css %}
     <link href="{% static "css/app/fetch.design.css" %}" rel="stylesheet"/>
-    <link href="{% static "node_modules/xterm/css/xterm.css" %}" rel="stylesheet"/>
 {% endblock app_css %}
 
 {% block app_js %}
-    <!-- <script src="{% static "node_modules/requirejs/require.js" %}"></script> -->
-    <script src="{% static "node_modules/xterm/lib/xterm.js" %}"></script>
-    <script src="{% static "node_modules/xterm-addon-fit/lib/xterm-addon-fit.js" %}"></script>
     <script src="{% static "vendor/socketio/2.1.1/socket.io.js" %}"></script>
     <script src="{% static "js/app/fetch.js" %}"></script>
 {% endblock app_js %}
@@ -31,8 +27,7 @@
     </button>
 </div>
 
-<div style="display: none;" data-url="{% url 'fetch:mnemonic' %}" id="mnemonic-data"></div>
-<div style="display: none;" data-url="{% url 'fetch:range' %}" id="mnemonic-range"></div>
+<!-- <div style="display: none;" data-url="{% url 'fetch:range' %}" id="mnemonic-range"></div> -->
 <div style="display: none;" data-url="{% url 'fetch:5min-stats-markup' %}" id="5minStatsMarkup"></div>
 <div style="display: none;" data-url="{% url 'fetch:daily-stats-markup' %}" id="dailyStatsMarkup"></div>
 
@@ -56,7 +51,7 @@
                 </ul>
             </li> -->
             <li>
-                <label for="mnemonic">Mnemonic:
+                <label for="mnemonic">mnemonic:
                     <input type="search" name="mnemonic" placeholder="Enter a mnemoic" id="mnemonic" style="width: 185px; height: 25px; font-size: 14px;">
                 </label>
             </li>
@@ -74,7 +69,7 @@
             </li>
             <li><button type="button" class="button small" value="Fetch" id="submit" style="line-height: 0;">FETCH</button></li>
 
-            <li style="margin-left: 5px;"><button type="button" class="button small disabled" value="Fetch" id="submit" style="line-height: 0;">INTERP.</button></li>
+            <li style="margin-left: 5px; color: white;"><button type="button" class="button small warning" value="" id="reset" style="line-height: 0;">RESET</button></li>
         </ul>
     </div>
 </div>
@@ -89,25 +84,44 @@
                 <div class="rect4"></div>
                 <div class="rect5"></div>
             </div>
-            <div style="height: 100%; width: 100%; background-image: url('{% static 'img/patterns/dot-grid.png' %}');">
+            <div id="default-view-no-data-wrapper" style="height: 100%; width: 100%; background-image: url('{% static 'img/patterns/dot-grid.png' %}');">
                 <div style="margin: 0 auto; top: 30%; position: relative;" id="default-view-no-data">
                     <i class="fas fa-satellite fa-9x"></i>
-                    <div style="font-size: 22px; margin-top: 10px;">No Data Fetched</div>
+                    <div style="font-size: 22px; margin-top: 10px;">No Plot Initialized</div>
                 </div>
             </div>
         </div>
     </div>
     <div class="cell small-12" style="height: 50%; border-top: #ddd solid 1px;" id="statsTableWrapper">
         <ul class="tabs" data-tabs id="example-tabs">
-            <li class="tabs-title is-active"><a class="text-color-daytime" href="#panel1" aria-selected="true" style="font-size: 12px;"><i class="fas fa-terminal"></i> Terminal</a></li>
-            <li class="tabs-title"><a class="text-color-daytime" data-tabs-target="panel2" href="#panel2" style="font-size: 12px;"><i class="fas fa-table"></i> Stats</a></li>
+            <li class="tabs-title is-active"><a class="text-color-daytime" data-tabs-target="panel1" href="#panel1" style="font-size: 12px;"><i class="fas fa-table"></i> Stats</a></li>
+            <li class="tabs-title"><a class="text-color-daytime" href="#panel2" aria-selected="true" style="font-size: 12px;"><i class="fas fa-microscope"></i> Full Res.</a></li>
         </ul>
-        <div class="tabs-content" data-tabs-content="example-tabs" style="border: none !important;">
+        <div class="tabs-content" data-tabs-content="example-tabs" style="border: none !important; padding-top: 10px;">
             <div class="tabs-panel is-active" style="padding: 0;" id="panel1">
-                <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div>
+                <!-- <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div> -->
+                <table id="mnemonicStatisticsTable"  data-stats-interval="null" class="display" style="width:100%" style="text-align: center; padding: 0 5px 0 5px;">
+                </table>
             </div>
             <div class="tabs-panel" id="panel2">
-                <table id="mnemonicStatisticsTable"  data-stats-interval="null" class="display" style="width:100%" style="text-align: center; padding: 0 5px 0 5px;"></table>
+                <div>
+                    <table id="js-full-resolution-data-table" class="display" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Value</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

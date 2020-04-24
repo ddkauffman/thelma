@@ -33,6 +33,30 @@ nodaemon=true
 logfile=/tmp/supervisord.log
 pidfile=/tmp/supervisord.pid
 
+[program:redis]
+directory=/srv/thelma/app/
+command=redis-server
+stdout_logfile=/srv/thelma/app/redis.log
+stdout_logfile_maxbytes=0
+stderr_logfile=/srv/thelma/app/redis.err
+stderr_logfile_maxbytes=0
+
+[program:celery]
+directory=/srv/thelma/app/thelma
+command=celery -A config worker -l info
+stdout_logfile=/srv/thelma/app/celery.log
+stdout_logfile_maxbytes=0
+stderr_logfile=/srv/thelma/app/celery.err
+stderr_logfile_maxbytes=0
+
+[program:celery-beat]
+directory=/srv/thelma/app/thelma
+command=celery -A config beat -l info
+stdout_logfile=/srv/thelma/app/celery-beat.log
+stdout_logfile_maxbytes=0
+stderr_logfile=/srv/thelma/app/celery-beat.err
+stderr_logfile_maxbytes=0
+
 
 [program:thelma]
 directory=/srv/thelma/app/thelma

@@ -9,7 +9,7 @@ urlpatterns = [
         name='viewer'
     ),
     url(
-        r'^mnemonic-data/',
+        r'mnemonic-data/',
         views.FetchMnemonicData.as_view(),
         name='mnemonic'
     ),
@@ -37,5 +37,15 @@ urlpatterns = [
         r'^stats-plot/',
         views.FetchStatisticsMinMeanMaxPlot.as_view(),
         name='stats-plot'
+    ),
+    url(
+        r'default/viewport',
+        views.get_default_plot_viewer_content,
+        name='default_viewport'
+    ),
+    url(
+        r'full/resolution',
+        views.get_full_resolution_data,
+        name='full_resolution_data'
     ),
 ]

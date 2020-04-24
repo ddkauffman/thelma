@@ -6,9 +6,9 @@ services:
       context: .
       args:
         ARG_VERSION_MAJOR: 1
-        ARG_VERSION_MINOR: 1
-        ARG_VERSION_PATCH: 0
-        ARG_RELEASE: "pre-alpha"
+        ARG_VERSION_MINOR: 5
+        ARG_VERSION_PATCH: 1
+        ARG_RELEASE: "rc"
         DEFAULT_USER: ${DEFAULT_USER}
     restart: always
     ports:
@@ -20,6 +20,7 @@ services:
       - "TELEMETRY_API_PORT=${TELEMETRY_API_PORT}"
       # - "WEB_ROOT=${WEB_ROOT}"
       - "DJANGO_SETTINGS_MODULE=config.settings.base"
+      - "HTTP_PROTOCOL=${HTTP_PROTOCOL}"
     # network_mode: "host"
 networks:
   default:

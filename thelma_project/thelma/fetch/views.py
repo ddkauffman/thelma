@@ -3,7 +3,7 @@
 This Django view is responsible for handling requests for telemetry data
 
 """
-
+import os
 import json
 import requests
 
@@ -25,12 +25,36 @@ from django.views.generic import TemplateView
 from thelma.core.views import get_user_preference
 
 
-def get_mnemonic_date_range(mnemonic):
+def get_full_resolution_data(request):
 
-    url = f'http://{settings.TELEMETRY_API_HOST}:{settings.TELEMETRY_API_PORT}/api/v1/fetch/date-range'
+    context = {
+        'data': None,
+    }
 
     try:
-        date_range = requests.get(url,  params={'mnemonic': mnemonic, })
+        mnemonic = request.GET.get('mnemonic')
+        url = url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch'
+        data = requests.get(url, params={'mnemonic': mnemonic, }).json()
+
+        context['data'] = data
+
+    except Exception as err:
+        print(err.args[0])
+
+    return render(request, 'fetch/full_resolution_data_table.html', context)
+
+
+def get_default_plot_viewer_content(request):
+
+    return render(request, 'fetch/default_plot_viewer_content.html', {})
+
+
+def get_mnemonic_date_range(mnemonic):
+
+    url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/date-range'
+
+    try:
+        date_range = requests.get(url, params={'mnemonic': mnemonic, })
     except Exception as err:
         raise ValueError(err.args[0])
     if date_range.json().get('error', '') != '':
@@ -52,7 +76,7 @@ class FetchMnemonicDataInRange(View):
         new_domain_start = request.GET.get('newDomainStart', None)
         new_domain_end = request.GET.get('newDomainEnd', None)
 
-        url = f'http://{settings.TELEMETRY_API_HOST}:{settings.TELEMETRY_API_PORT}/api/v1/fetch/data'
+        url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/data'
 
         telemetry = requests.get(url, params={
             'mnemonic': mnemonic,
@@ -91,7 +115,7 @@ class FetchMnemonicData(View):
         try:
             mnemonic = request.GET.get('mnemonic').replace(' ', '')
             if mnemonic == '':
-                raise ValueError('Error: Missing paramenter for mnenonic.')
+                raise ValueError('Oops! Sorry, missing parameter, mnenonic.')
             date_range = get_mnemonic_date_range(mnemonic)
 
             start_of_range = request.GET.get('start_of_range').replace(' ', '')
@@ -101,9 +125,9 @@ class FetchMnemonicData(View):
 
             end_of_range = request.GET.get('end_of_range').replace(' ', '')
 
-            url = f'http://{settings.TELEMETRY_API_HOST}:{settings.TELEMETRY_API_PORT}/api/v1/fetch/plot/data'
+            url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/plot'
 
-            telemetry = requests.get(url,  params={
+            telemetry = requests.get(url, params={
                     'mnemonic': mnemonic,
                     'start_of_range': start_of_range,
                     'end_of_range': end_of_range
@@ -133,15 +157,20 @@ class FiveMinStats(TemplateView):
 
         if mnemonic is not None and mnemonic != 'default':
 
-            url = f'http://{settings.TELEMETRY_API_HOST}:{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
+            url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
             parameters = {'mnemonic': mnemonic, 'interval': '5min'}
 
             try:
                 statistics = requests.get(url,  params=parameters)
                 statistics = statistics.json()['stats']
             except Exception as err:
-                return HttpResponse(json.dumps({'message': err.args[0]}), status=500, content_type="application/json")
-        print(statistics)
+                return HttpResponse(json.dumps({
+                    'message': err.args[0],
+                    'source': 'thelman.web',
+                    'class': FiveMinStats,
+                    'call_response': statistics
+                    }), status=500, content_type="application/json")
+
         return render(
             request,
             'fetch/stats/5min_stats.html',
@@ -158,7 +187,7 @@ class DailyStats(TemplateView):
 
         if mnemonic is not None and mnemonic != 'default':
 
-            url = f'http://{settings.TELEMETRY_API_HOST}:{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
+            url = f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}{settings.TELEMETRY_API_PORT}/api/v1/fetch/stats'
             parameters = {'mnemonic': mnemonic, 'interval': 'daily'}
 
             try:
@@ -212,17 +241,12 @@ class FetchStatisticsMinMeanMaxPlot(View):
     def get(self, request):
 
         url = (
-            f'http://{settings.TELEMETRY_API_HOST}'
-            f':{settings.TELEMETRY_API_PORT}'
+            f'{settings.HTTP_PROTOCOL}://{settings.TELEMETRY_API_HOST}'
+            f'{settings.TELEMETRY_API_PORT}'
             f'/api/v1/fetch/min-mean-max'
         )
 
-        response = requests.get(
-                        url,
-                        params={
-                            'mnemonic': request.GET.get('mnemonic'),
-                        }
-                    )
+        response = requests.get(url, params={'mnemonic': request.GET.get('mnemonic')})
 
         statistics = response.json()['data']
 

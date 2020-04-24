@@ -1,0 +1,21 @@
+{% load index %}
+<thead>
+    <tr>
+        <th>Date/Time</th>
+        <th>Value</th>
+    </tr>
+</thead>
+<tbody>
+    {% for time in data.0.x %}
+        <tr>
+            <td>{{ time }}</td>
+            <td>{{ data.0.y|index:forloop.counter0  }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+<tfoot>
+    <tr>
+        <th>Date/Time</th>
+        <th>Value</th>
+    </tr>
+</tfoot>

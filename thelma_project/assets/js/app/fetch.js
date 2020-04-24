@@ -22,8 +22,9 @@ $(document).ready(function(){
         currentMnemonic: null,
         init: function(){
             this.onClickSubmit();
+            this.onClickReset();
             this.getStatsTableMarkup('default');
-            this.initTerminal();
+            $('#js-full-resolution-data-table').DataTable();
             this.onSelectTab();
         },
 
@@ -65,7 +66,7 @@ $(document).ready(function(){
             $('#mnemonicStatisticsTable').DataTable({
                 dom: "<'row'<'small-6 columns'l><'small-6 columns'f>Br>"+
                      "t"+
-                     "<'row'<'small-6 columns'i><'small-6 columns'p>>",
+                     "<'row'<'small-6 columns'i><'small-6 columns'>p>",
                 buttons: [
                     {
                         extend: 'collection',
@@ -79,7 +80,7 @@ $(document).ready(function(){
                         action: function(){
 
                             $.ajax({
-                                url:'/stats-plot/',
+                                url: window.location + 'stats-plot/',
                                 method: 'get',
                                 data:{'mnemonic': $('#mnemonic').val()},
                                 success: function(response){
@@ -110,38 +111,12 @@ $(document).ready(function(){
                         className: 'tiny margin-left',
                     }
                 ],
-                scrollY: "200px",
+                // scrollY: "200px",
                 scrollCollapse: true,
                 pageLength: 5,
             });
         },
 
-        initTerminal: function(){
-
-
-            const term = new Terminal({
-                cursorBlink: true,
-                macOptionIsMeta: true,
-                scrollback: true,
-            });
-            // const fitAddon = FitAddon();
-            // term.loadAddon(fitAddon);
-
-            term.open(document.getElementById('terminal'));
-
-            console.log(`size: ${term.cols} columns, ${term.rows} rows`)
-
-            term.write('Connecting to \x1B[1;3;31mjSka\x1B[0m ... ')
-            term.onKey((event, ev) => {
-                // console.log("Event Object:", event);
-                // socket.send(event.key);
-            });
-
-            // socket.onmessage = function(event){
-            //     console.log('Message from Socket', event.data)
-            //     term.write(event.data)
-            // };
-        },
 
         /**
          *
@@ -159,9 +134,31 @@ $(document).ready(function(){
                     $('#mnemonicStatisticsTable').html(html);
                     THELMA.Fetch.initStatisticTable();
                 },
-                error: function(){
-
+                error: function(xhr, error, status){
+                    new Noty({
+                        type: 'error',
+                        text: 'Error: could not fetch stats.',
+                    }).show();
                 }
+            });
+         },
+
+         getFullResolutionMarkup: function(mnemonic){
+            $.ajax({
+                url: window.location + '/fetch/full/resolution',
+                method: 'get',
+                data: {
+                    mnemonic: mnemonic,
+                },
+                success: function(response){
+                    $('#js-full-resolution-data-table').DataTable().destroy();
+                    $('#js-full-resolution-data-table').html(response);
+                    $('#js-full-resolution-data-table').DataTable();
+                },
+                error: function(xhr, status, error){
+                    console.log(status);
+                    console.log(error);
+                },
             });
          },
 
@@ -201,15 +198,16 @@ $(document).ready(function(){
             $('#submit').off('click');
             $('#submit').on('click', function(){
 
+                $('#default-view-no-data-wrapper').addClass('no-display');
                 $('#ingestLoadingSpinner').removeClass('no-display');
 
                 mnemonic = String(document.getElementById('mnemonic').value)
                 THELMA.Fetch.currentMnemonic = mnemonic;
 
-                start_of_range = String(document.getElementById('startOfRangeInput').value)
-                end_of_range = String(document.getElementById('endOfRangeInput').value)
+                start_of_range = String(document.getElementById('startOfRangeInput').value);
+                end_of_range = String(document.getElementById('endOfRangeInput').value);
 
-                dataURL = $('#mnemonic-data').attr('data-url');
+                dataURL = window.location + 'mnemonic-data/';
                 $.ajax({
                     url: dataURL,
                     method: 'get',
@@ -219,13 +217,23 @@ $(document).ready(function(){
                         end_of_range: end_of_range,
                     },
                     success: function(json){
+                        $('#default-view-no-data-wrapper').removeClass('no-display');
                         $('#ingestLoadingSpinner').addClass('no-display');
-                        THELMA.Fetch.plot(json)
+                        new Noty(
+                            {
+                                text: `Fetch for ${mnemonic} complete!`,
+                                type: 'success',
+                                timeout: 3000,
+                            }
+                        ).show();
+                        THELMA.Fetch.plot(json);
                         THELMA.Fetch.getStatsTableMarkup(mnemonic);
+                        THELMA.Fetch.getFullResolutionMarkup(mnemonic);
                     },
                     error: function(xhr, status, error){
+                        $('#default-view-no-data-wrapper').removeClass('no-display');
                         $('#ingestLoadingSpinner').addClass('no-display');
-                        var noty = new Noty(
+                        new Noty(
                             {
                                 text: String($.parseJSON(xhr.responseText)['error']),
                                 type: 'error'
@@ -234,6 +242,29 @@ $(document).ready(function(){
                     },
                 });
 
+            });
+        },
+
+        onClickReset: function(){
+            $('#reset').off('click');
+            $('#reset').on('click', function(){
+                Plotly.newPlot('plot');
+                $.ajax({
+                    url: window.location + 'default/viewport',
+                    method: 'get',
+                    success: function(response){
+                        $('#plot').html(response);
+                        $('#js-full-resolution-data-table').DataTable().clear().draw();
+                        $('#mnemonicStatisticsTable').DataTable().clear().draw();
+                    },
+                    error: function(xhr, status, error){
+                        new Noty({
+                            text: 'Warning: Problem getting default viewport',
+                            type: 'warning',
+                            timeout: 5000,
+                        });
+                    }
+                });
             });
         },
 
